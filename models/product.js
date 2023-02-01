@@ -1,6 +1,4 @@
-mongodb=require('mongodb');
-
-
+const mongodb=require('mongodb');
 const getDb=require('../util/database').getDb
 
 class Product{
@@ -58,7 +56,6 @@ class Product{
     .catch(err=>console.log(err))
   }
 }
-
 
 // const Sequelize = require('sequelize');
 
