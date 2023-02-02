@@ -12,7 +12,7 @@ const errorController = require('./controllers/error');
 // const Order = require('./models/order');
 // const OrderItem = require('./models/order-item');
 // const mongoConnect=require('./util/database').mongoConnect;
-// const User=require('./models/user')
+const User=require('./models/user')
 const mongoose=require('mongoose');
 
 const app = express();
@@ -26,14 +26,14 @@ const shopRoutes = require('./routes/shop');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use((req, res, next) => {
-//   User.findById('63da9882d2d8fc5f9dcf02e7')
-//   .then(user => {
-//     req.user = new User(user.name,user.email,user.cart,user._id);
-//     next();
-//   })
-//   .catch(err => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findById('63dc072dc909549a2a9955bf')
+  .then(user => {
+    req.user = user;
+    next();
+  })
+  .catch(err => console.log(err));
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
@@ -85,6 +85,18 @@ app.use(errorController.get404);
 // Mongoose connection
 mongoose.connect('mongodb+srv://arjun:simran@cluster0.rjlptec.mongodb.net/shop?retryWrites=true&w=majority')
 .then(()=>{
+  User.findOne().then((user)=>{
+    if(!user){
+      const user=new User({
+        name:'Arjun',
+        email:'arjun@123',
+        cart:{
+          items:[]
+        }
+      })
+      user.save()
+    }
+  })
   app.listen(3000)
 })
 .catch(err=>console.log(err))
